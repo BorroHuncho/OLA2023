@@ -242,7 +242,7 @@ cumulative_reward_ts /= n_runs
 instantaneous_regret_ts /= n_runs
 instantaneous_reward_ts /= n_runs
 
-cumulative_reward_clairvoyant = n_runs
+cumulative_reward_clairvoyant /= n_runs
 instantaneous_reward_clairvoyant /= n_runs
 
 # Calculate standard deviation for instantaneous rewards
@@ -251,14 +251,14 @@ std_instantaneous_reward_ts = np.std(instantaneous_reward_ts)
 
 # Calculate the cumulative reward for the clairvoyant
 cumulative_reward_clairvoyant = np.cumsum(instantaneous_reward_clairvoyant)
-
-# Set the instantaneous reward for the clairvoyant to a constant value of 1
-instantaneous_reward_clairvoyant = np.ones(T)
+cumulative_reward_clairvoyant = np.ones(T) * cumulative_reward_clairvoyant[-1]
+#Calculate instantaneous rewards for clairvoyant
+instantaneous_reward_clairvoyant = np.ones(T)*instantaneous_reward_clairvoyant[-1]
 
 # Calculate the cumulative rewards for UCB, TS, and clairvoyant
 cumulative_reward_ucb = np.cumsum(instantaneous_reward_ucb)
 cumulative_reward_ts = np.cumsum(instantaneous_reward_ts)
-cumulative_reward_clairvoyant = np.cumsum(instantaneous_reward_clairvoyant)
+
 
 # Plot the performance metrics
 plt.figure(figsize=(12, 8))
