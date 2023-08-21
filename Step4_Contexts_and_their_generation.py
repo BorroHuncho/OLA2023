@@ -190,6 +190,11 @@ cumulative_reward_ts = np.zeros(T)
 instantaneous_regret_ts = np.zeros(T)
 instantaneous_reward_ts = np.zeros(T)
 
+
+# Define arrays to store the performance metrics for the clairvoyant
+cumulative_reward_clairvoyant = np.zeros(T)
+instantaneous_reward_clairvoyant = np.zeros(T)
+
 # Simulate the contextual bandit problem for multiple runs
 for run in range(n_runs):
     ucb_learner = ContextualUCBLearner(n_arms=n_arms)
@@ -223,6 +228,9 @@ for run in range(n_runs):
         instantaneous_regret_ts[t-1] += optimal_reward - reward_ts
         instantaneous_reward_ts[t-1] += reward_ts
 
+        cumulative_reward_clairvoyant[t-1] += optimal_reward
+        instantaneous_reward_clairvoyant[t-1] += optimal_reward
+
 # Calculate the average and standard deviation of the performance metrics
 cumulative_regret_ucb /= n_runs
 cumulative_reward_ucb /= n_runs
@@ -234,22 +242,63 @@ cumulative_reward_ts /= n_runs
 instantaneous_regret_ts /= n_runs
 instantaneous_reward_ts /= n_runs
 
+cumulative_reward_clairvoyant = n_runs
+instantaneous_reward_clairvoyant /= n_runs
+
+# Calculate standard deviation for instantaneous rewards
+std_instantaneous_reward_ucb = np.std(instantaneous_reward_ucb)
+std_instantaneous_reward_ts = np.std(instantaneous_reward_ts)
+
+# Calculate the cumulative reward for the clairvoyant
+cumulative_reward_clairvoyant = np.cumsum(instantaneous_reward_clairvoyant)
+
+# Set the instantaneous reward for the clairvoyant to a constant value of 1
+instantaneous_reward_clairvoyant = np.ones(T)
+
+# Calculate the cumulative rewards for UCB, TS, and clairvoyant
+cumulative_reward_ucb = np.cumsum(instantaneous_reward_ucb)
+cumulative_reward_ts = np.cumsum(instantaneous_reward_ts)
+cumulative_reward_clairvoyant = np.cumsum(instantaneous_reward_clairvoyant)
+
 # Plot the performance metrics
 plt.figure(figsize=(12, 8))
-plt.plot(cumulative_regret_ucb, label='UCB Cumulative Regret')
-plt.plot(cumulative_reward_ucb, label='UCB Cumulative Reward')
-plt.plot(instantaneous_regret_ucb, label='UCB Instantaneous Regret')
-plt.plot(instantaneous_reward_ucb, label='UCB Instantaneous Reward')
-
-plt.plot(cumulative_regret_ts, label='TS Cumulative Regret')
-plt.plot(cumulative_reward_ts, label='TS Cumulative Reward')
-plt.plot(instantaneous_regret_ts, label='TS Instantaneous Regret')
-plt.plot(instantaneous_reward_ts, label='TS Instantaneous Reward')
-
+plt.plot(instantaneous_reward_ucb, label='UCB Instantaneous Reward', color='blue')
+plt.plot(instantaneous_reward_ts, label='TS Instantaneous Reward', color='red')
+plt.plot(instantaneous_reward_clairvoyant, label='Clairvoyant Instantaneous Reward', color='green')
+plt.fill_between(range(T), instantaneous_reward_ucb - std_instantaneous_reward_ucb, instantaneous_reward_ucb + std_instantaneous_reward_ucb, alpha=0.2, color='blue')
+plt.fill_between(range(T), instantaneous_reward_ts - std_instantaneous_reward_ts, instantaneous_reward_ts + std_instantaneous_reward_ts, alpha=0.2, color='red')
 plt.xlabel('Time')
-plt.ylabel('Value')
+plt.ylabel('Reward')
 plt.legend()
+plt.title('Instantaneous Rewards + Standard Deviation')
 plt.show()
 
-        
-        
+plt.figure(figsize=(12, 8))
+plt.plot(instantaneous_reward_ucb, label='UCB Instantaneous Reward', color='blue')
+plt.plot(instantaneous_reward_ts, label='TS Instantaneous Reward', color='red')
+plt.plot(instantaneous_reward_clairvoyant, label='Clairvoyant Instantaneous Reward', color='green')
+plt.xlabel('Time')
+plt.ylabel('Reward')
+plt.legend()
+plt.title('Instantaneous Reward')
+plt.show()
+
+plt.figure(figsize=(12, 8))
+plt.plot(cumulative_regret_ucb, label='UCB Cumulative Regret', color='blue')
+plt.plot(cumulative_regret_ts, label='TS Cumulative Regret', color='red')
+plt.xlabel('Time')
+plt.ylabel('Regret')
+plt.legend()
+plt.title('Cumulative Regrets')
+plt.show()
+
+# Plot the cumulative rewards
+plt.figure(figsize=(12, 8))
+plt.plot(cumulative_reward_ucb, label='UCB Cumulative Reward', color='blue')
+plt.plot(cumulative_reward_ts, label='TS Cumulative Reward', color='red')
+plt.plot(cumulative_reward_clairvoyant, label='Clairvoyant Cumulative Reward', color='green')
+plt.xlabel('Time')
+plt.ylabel('Cumulative Reward')
+plt.legend()
+plt.title('Cumulative Rewards')
+plt.show()
