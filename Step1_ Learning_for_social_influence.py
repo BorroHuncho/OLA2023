@@ -27,8 +27,7 @@ customer_assignments = np.random.choice([0,1,2], size=30)
 
 
 
-print("\nESTIMATING EDGE PROBABILITIES WITH UCB")
-print(len("ESTIMATING EDGE PROBABILITIES WITH UCB")*"=")
+"""ESTIMATING EDGE PROBABILITIES WITH UCB"""
 
 def UCB_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=100):
 
@@ -66,8 +65,7 @@ UCB_estimated_graph_probabilities = np.array(UCB_estimated_graph_probabilities)
 UCB_estimated_graph_probabilities = np.transpose(UCB_estimated_graph_probabilities, (1, 0, 2))
 
 
-print("ESTIMATING EDGE PROBABILITIES WITH TS")
-print(len("ESTIMATING EDGE PROBABILITIES WITH TS")*"=")
+"""ESTIMATING EDGE PROBABILITIES WITH TS"""
 
 def TS_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=100):
 
@@ -110,7 +108,8 @@ for table in TS_estimated_graph_probabilities:
 TS_estimated_graph_probabilities = new_TS_estimated_graph_probabilities
 
 
-print("Instantaneous Regrets for Edge Activation Probability Estimation ")
+"""Instantaneous Regrets for Edge Activation Probability Estimation"""
+
 repeated_array = np.tile(graph_probabilities, (365, 1, 1))
 original_probabilities = repeated_array.reshape((365, 30, 30))
 
@@ -139,8 +138,7 @@ plt.grid()
 plt.show()
 
 
-print("COMPUTING REWARDS WITH UCB ESTIMATES")
-print(len("COMPUTING REWARDS WITH UCB ESTIMATES")*"=")
+"""COMPUTING REWARDS WITH UCB ESTIMATES"""
 
 n_exp = 5
 
@@ -153,8 +151,7 @@ for table in tqdm(range(T)):
     UCB_std_dev_rewards_per_round.append(clairvoyant_output[1])
 
 
-print("COMPUTING REWARDS WITH TS ESTIMATES")
-print(len("COMPUTING REWARDS WITH TS ESTIMATES")*"=")
+"""COMPUTING REWARDS WITH TS ESTIMATES"""
 
 TS_mean_rewards_per_round = []
 TS_std_dev_rewards_per_round = []
@@ -165,9 +162,8 @@ for table in tqdm(range(T)):
     TS_std_dev_rewards_per_round.append(clairvoyant_output[1])
 
 
-print("COMPUTING REWARDS WITH TRUE PROBABILITIES")
-print(len("COMPUTING REWARDS WITH TRUE PROBABILITIES")*"=")
-print("100 Simulations for Greedy Algorithm")
+"""COMPUTING REWARDS WITH TRUE PROBABILITIES 100 Simulations for Greedy Algorithm"""
+
 optimum_means = []
 optimum_std_dev = []
 
@@ -177,7 +173,7 @@ for t in range(T):
     optimum_std_dev.append(clairvoyant_output[1])
 
 
-print("1 Mln Simulations for Greedy Algorithm")
+"""COMPUTING REWARDS WITH TRUE PROBABILITIES 100.000 Simulations for Greedy Algorithm"""
 
 optimum_means1mln = []
 optimum_std_dev1mln = []
@@ -188,7 +184,7 @@ for t in range(T):
     optimum_std_dev1mln.append(clairvoyant_output[1])
 
 
-print("Plotting Rewards over time")
+"""Plotting Rewards over time"""
 
 plt.figure(figsize=(30, 10))
 plt.plot(time_periods, optimum_means1mln, color='#34ff00', linestyle='-', linewidth=3.5, label="Optimum")

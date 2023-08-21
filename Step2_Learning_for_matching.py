@@ -13,7 +13,7 @@ n_arms = 30
 edge_rate=0.07
 graph_structure = np.random.binomial(1, edge_rate, (n_arms, n_arms))
 graph_probabilities = np.random.uniform(0.1, 0.9, (n_arms, n_arms)) * graph_structure
-graph_probabilities
+
 
 
 node_classes = 3
@@ -28,7 +28,7 @@ customer_assignments = np.random.choice([0,1,2], size=30)
 
 
 
-print("Estimating means with MatchingUCB\n")
+"""Estimating means with MatchingUCB"""
 
 p = true_reward_parameters[0]
 n_experiments = 3000
@@ -54,7 +54,7 @@ for exp in tqdm(range(n_experiments)):
 means = np.array(means)
 ucb_means = np.mean(means, axis=0)
 
-print("Estimating means with MatchingTS\n")
+"""Estimating means with MatchingTS"""
 
 p = true_reward_parameters[0]
 n_experiments = 3000
@@ -82,7 +82,7 @@ ts_means = np.mean(means, axis=0)
 
 
 
-print("Computing Regrets for Matching Problem\n")
+"""Computing Regrets for Matching Problem"""
 
 row_ind, col_ind = linear_sum_assignment(-p)
 optimum = p[row_ind, col_ind].sum()
@@ -149,8 +149,8 @@ plt.legend()
 plt.tight_layout()
 plt.show()
 
-print("Computing overall rewards\n")
-print("Overall outcome when estimating matching rewards with UCBMatching\n")
+"""Computing overall rewards"""
+"""Overall outcome when estimating matching rewards with UCBMatching"""
 
 opt_seeds = greedy_algorithm(graph_probabilities, 3, 10000, 10)
 std_dev = np.full(9, 0.05)
@@ -182,7 +182,7 @@ for t in range(T):
 
 
 
-print("Plotting Overall Rewards and Regret\n")
+"""Plotting Overall Rewards and Regret"""
 
 opt_seeds = greedy_algorithm(graph_probabilities, 3, 100, 10)
 optimum_means = []

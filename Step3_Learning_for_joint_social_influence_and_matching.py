@@ -9,19 +9,16 @@ from Learners import Learner, UCBLearner, TSLearner, UCBMatching, TSMatching
 from Utils import simulate_episode, test_seed, greedy_algorithm, hungarian_algorithm, get_reward, clairvoyant
 
 
-print("Estimating Edge Activation Probabilities\n")
+"""Estimating Edge Activation Probabilities"""
 
 n_arms = 30
 edge_rate=0.07
 graph_structure = np.random.binomial(1, edge_rate, (n_arms, n_arms))
 graph_probabilities = np.random.uniform(0.1, 0.9, (n_arms, n_arms)) * graph_structure
 
-print("Estimating probabilities with UCB Learner...\n")
-
+"""Estimating probabilities with UCB Learner..."""
 def UCB_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=100):
-
     experimentS_means_at_each_round = np.empty((n_experiments, T, n_arms))
-
     for e in tqdm(range(0, n_experiments)):
         # Initialize environment
         ucb_env = Environment(probabilities=p)
@@ -58,7 +55,7 @@ UCB_estimated_graph_probabilities = np.transpose(UCB_estimated_graph_probabiliti
 for table in UCB_estimated_graph_probabilities:
     table = table*graph_structure
 
-print("Estimating probabilities with TS Learner...\n")
+"""Estimating probabilities with TS Learner..."""
 
 def TS_Generate_Probability_Estimates(p, n_arms=30, T=365, n_experiments=100):
     experimentS_means_at_each_round = np.empty((n_experiments, T, n_arms))
@@ -103,7 +100,7 @@ for table in TS_estimated_graph_probabilities:
 TS_estimated_graph_probabilities = new_TS_estimated_graph_probabilities
 
 
-print("Estimating Matching Reward...\n")
+"""Estimating Matching Reward..."""
 
 node_classes = 3
 product_classes = 3
@@ -115,7 +112,7 @@ std_dev = np.random.uniform(0.1, 0.2, size=(3, 3))
 true_reward_parameters = (means, std_dev)
 customer_assignments = np.random.choice([0,1,2], size=30)
 
-print("Estimating Matching Reward with UCB...\n")
+"""Estimating Matching Reward with UCB..."""
 
 p = true_reward_parameters[0]
 n_experiments = 1
@@ -142,7 +139,7 @@ for exp in tqdm(range(n_experiments)):
 means = np.array(means)
 ucb_means = np.mean(means, axis=0)
 
-print("Estimating Matching Reward with TS...\n")
+"""Estimating Matching Reward with TS..."""
 
 p = true_reward_parameters[0]
 n_experiments = 1
@@ -169,7 +166,7 @@ means = np.array(means)
 ts_means = np.mean(means, axis=0)
 
 
-print("Estimating overall rewards...")
+"""Estimating overall rewards..."""
 
 std_dev = np.full(9, 0.05)
 std_dev = std_dev.reshape(3, 3)
@@ -212,8 +209,51 @@ plt.xlabel('Time')
 plt.ylabel('Average Rewards')
 plt.title('Comparison of overall rewards')
 plt.legend()
+plt.tight_layout()
+plt.show()
+
+"""Overall reward with UCB..."""
+
+x = np.arange(T)
+
+plt.figure(figsize=(14, 5))
+
+for i in range(len(x)):
+    plt.plot([x[i], x[i]], [avg_ucb_overall_rew[i] - std_dev_ucb_overall_rew[i], avg_ucb_overall_rew[i] + std_dev_ucb_overall_rew[i]], color='lightgrey')
+
+plt.plot(x, avg_ucb_overall_rew, label='Overall reward with UCB', color="blue")
+plt.plot(x, optimum_means, label='Optimum', color="lightgreen", linewidth=5)
+
+plt.errorbar(x, avg_ucb_overall_rew, yerr=std_dev_ucb_overall_rew, fmt='o', markersize=2, color="lightblue", alpha=0.5)
+
+plt.xlabel('Time')
+plt.ylabel('Average Rewards')
+plt.title('Overall reward with UCB')
+plt.legend()
+
+plt.tight_layout()
+plt.show()
 
 
+"""Overall reward with TS"""
+
+
+x = np.arange(T)
+
+plt.figure(figsize=(14, 5))
+
+for i in range(len(x)):
+    plt.plot([x[i], x[i]], [avg_ts_overall_rew[i] - std_dev_ts_overall_rew[i], avg_ts_overall_rew[i] + std_dev_ts_overall_rew[i]], color='lightgrey')
+
+plt.plot(x, avg_ts_overall_rew, label='Overall reward with TS', color="red")
+plt.plot(x, optimum_means, label='Optimum', color="lightgreen", linewidth=5)
+
+plt.errorbar(x, avg_ts_overall_rew, yerr=std_dev_ts_overall_rew, fmt='o', markersize=2, color="lightpink", alpha=0.5)
+
+plt.xlabel('Time')
+plt.ylabel('Average Rewards')
+plt.title('Overall reward with TS')
+plt.legend()
 
 plt.tight_layout()
 plt.show()
