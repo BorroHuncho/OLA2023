@@ -52,7 +52,7 @@ def greedy_algorithm(init_prob_matrix, budget, k, max_steps):
     for j in range(budget):
         rewards=np.zeros(n_nodes)
 
-        for i in tqdm(range(n_nodes)):
+        for i in range(n_nodes):
             if i not in seeds:
                 rewards[i]=test_seed([i]+seeds, prob_matrix, k, max_steps)
         seeds.append(np.argmax(rewards))
@@ -77,17 +77,20 @@ def hungarian_algorithm(matrix):
 
     return assignment[:n_rows, :n_cols] * matrix, assignment[:n_rows, :n_cols]
 
+
 def get_reward(node_class, product_class, rewards_parameters):
-    return 100-np.random.normal(rewards_parameters[0][node_class, product_class], rewards_parameters[1][node_class, product_class])
+    return np.random.normal(rewards_parameters[0][node_class, product_class],
+                            rewards_parameters[1][node_class, product_class])
 
 
-def clairvoyant(graph_probabilities, true_prob, customer_assignments, rewards_parameters, real_reward_parameters, n_exp, seeds=None):
+def clairvoyant(graph_probabilities, true_prob, customer_assignments, rewards_parameters, real_reward_parameters, n_exp,
+                seeds=None):
     hungarian_matrix = hungarian_algorithm(rewards_parameters[0])[1]
 
     reward_per_experiment = [[] for i in range(n_exp)]
 
     if seeds == None:
-        opt_seeds = greedy_algorithm(graph_probabilities, 3, 1000, 100)
+        opt_seeds = greedy_algorithm(graph_probabilities, 3, 50, 100)
     else:
         opt_seeds = seeds
 
@@ -100,7 +103,7 @@ def clairvoyant(graph_probabilities, true_prob, customer_assignments, rewards_pa
 
         units = [3, 3, 3]
 
-        while units != [0, 0, 0]:
+        while units > [0, 0, 0]:
 
             for customer in class_activation_flow:
 

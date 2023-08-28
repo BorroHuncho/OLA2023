@@ -1,15 +1,6 @@
-# -*- coding: utf-8 -*-
-"""
-Created on Sun Aug 20 18:28:35 2023
-
-@author: Utente
-"""
-
 import matplotlib.pyplot as plt
 import numpy as np
-from tqdm import tqdm
-import random
-from scipy.optimize import linear_sum_assignment
+
 from sklearn.cluster import KMeans
 
 class Learner:
@@ -51,7 +42,6 @@ class UCBLearner(Learner):
     def expectations(self):
         return self.empirical_means
 
-
 class TSLearner(Learner):
     def __init__(self, n_arms):
         super().__init__(n_arms)
@@ -78,7 +68,7 @@ class TSLearner(Learner):
     def expectations(self):
         return self.means
 
-import numpy as np
+
 
 class Environment:
     def __init__(self, probabilities):
@@ -132,9 +122,6 @@ context_generator = ContextGenerator(n_clusters=n_clusters)
 # Define the number of arms
 n_arms = 30
 
-# Define the edge rate
-edge_rate = 0.07
-
 # Define the time horizon
 T = 365
 
@@ -170,8 +157,6 @@ for t in range(1, T+1):
     ts_learner.update(pulled_arm_ts, reward_ts)
 
 #SECOND PART OF THE CODE
-
-
 
 # Define the optimal arm
 optimal_arm = np.argmax(env.probabilities)
@@ -249,18 +234,48 @@ instantaneous_reward_clairvoyant /= n_runs
 std_instantaneous_reward_ucb = np.std(instantaneous_reward_ucb)
 std_instantaneous_reward_ts = np.std(instantaneous_reward_ts)
 
+# Calculate standard deviation for instantaneous regrets
+std_instantaneous_regret_ucb = np.std(instantaneous_regret_ucb)
+std_instantaneous_regret_ts = np.std(instantaneous_regret_ts)
+
 # Calculate the cumulative reward for the clairvoyant
 cumulative_reward_clairvoyant = np.cumsum(instantaneous_reward_clairvoyant)
 cumulative_reward_clairvoyant = np.ones(T) * cumulative_reward_clairvoyant[-1]
+
 #Calculate instantaneous rewards for clairvoyant
 instantaneous_reward_clairvoyant = np.ones(T)*instantaneous_reward_clairvoyant[-1]
 
-# Calculate the cumulative rewards for UCB, TS, and clairvoyant
+# Calculate the cumulative rewards for UCB and TS
 cumulative_reward_ucb = np.cumsum(instantaneous_reward_ucb)
 cumulative_reward_ts = np.cumsum(instantaneous_reward_ts)
 
+#Calculate the cumulative regrets for UCB and TS
+cumulative_regret_ucb = np.cumsum(instantaneous_regret_ucb)
+cumulative_regret_ts = np.cumsum(instantaneous_regret_ts)
+
+# Print the rewards, regrets, and standard deviations
+print("UCB Instantaneous Reward:", instantaneous_reward_ucb[-1])
+print("UCB Cumulative Reward:", cumulative_reward_ucb[-1])
+print("UCB Instantaneous Regret:", instantaneous_regret_ucb[-1])
+print("UCB Cumulative Regret:", cumulative_regret_ucb[-1])
+print("UCB Standard Deviation:", std_instantaneous_reward_ucb)
+
+print("TS Instantaneous Reward:", instantaneous_reward_ts[-1])
+print("TS Cumulative Reward:", cumulative_reward_ts[-1])
+print("TS Instantaneous Regret:", instantaneous_regret_ts[-1])
+print("TS Cumulative Regret:", cumulative_regret_ts[-1])
+print("TS Standard Deviation:", std_instantaneous_reward_ts)
+
+
+#Calculate avg values to insert in plots
+instantaneous_regret_ucb_avg = np.mean(instantaneous_regret_ucb)
+instantaneous_reward_ucb_avg = np.mean(instantaneous_reward_ucb)
+instantaneous_regret_ts_avg = np.mean(instantaneous_regret_ts)
+instantaneous_reward_ts_avg = np.mean(instantaneous_reward_ts)
 
 # Plot the performance metrics
+
+#Instantaneous Reward + std.dev
 plt.figure(figsize=(12, 8))
 plt.plot(instantaneous_reward_ucb, label='UCB Instantaneous Reward', color='blue')
 plt.plot(instantaneous_reward_ts, label='TS Instantaneous Reward', color='red')
@@ -273,16 +288,44 @@ plt.legend()
 plt.title('Instantaneous Rewards + Standard Deviation')
 plt.show()
 
+#Instantaneous Reward
 plt.figure(figsize=(12, 8))
 plt.plot(instantaneous_reward_ucb, label='UCB Instantaneous Reward', color='blue')
 plt.plot(instantaneous_reward_ts, label='TS Instantaneous Reward', color='red')
 plt.plot(instantaneous_reward_clairvoyant, label='Clairvoyant Instantaneous Reward', color='green')
+plt.axhline(y=instantaneous_reward_ts_avg, color='violet', linestyle='--', label='TS Average Instantaneous Reward')
+plt.axhline(y=instantaneous_reward_ucb_avg, color='lightblue', linestyle='--', label='UCB Average Instantaneous Reward')
 plt.xlabel('Time')
 plt.ylabel('Reward')
 plt.legend()
 plt.title('Instantaneous Reward')
 plt.show()
 
+#Instantaneous Regret 
+plt.figure(figsize=(12, 8))
+plt.plot(instantaneous_regret_ucb, label='UCB Instantaneous Regret', color='blue')
+plt.plot(instantaneous_regret_ts, label='TS Instantaneous Regret', color='red')
+plt.axhline(y=instantaneous_regret_ts_avg, color='violet', linestyle='--', label='TS Average Instantaneous Regret')
+plt.axhline(y=instantaneous_regret_ucb_avg, color='lightblue', linestyle='--', label='UCB Average Instantaneous Regret')
+plt.xlabel('Time')
+plt.ylabel('Regret')
+plt.legend()
+plt.title('Instantaneous Regrets')
+plt.show()
+
+#Instantaneous Regret + std.dev
+plt.figure(figsize=(12, 8))
+plt.plot(instantaneous_regret_ucb, label='UCB Instantaneous Regret', color='blue')
+plt.plot(instantaneous_regret_ts, label='TS Instantaneous Regret', color='red')
+plt.fill_between(range(T), instantaneous_regret_ucb - std_instantaneous_regret_ucb, instantaneous_regret_ucb + std_instantaneous_regret_ucb, alpha=0.2, color='blue')
+plt.fill_between(range(T), instantaneous_regret_ts - std_instantaneous_regret_ts, instantaneous_regret_ts + std_instantaneous_regret_ts, alpha=0.2, color='red')
+plt.xlabel('Time')
+plt.ylabel('Regret')
+plt.legend()
+plt.title('Instantaneous Regrets + Standard Deviation')
+plt.show()
+
+#Cumulative Regret
 plt.figure(figsize=(12, 8))
 plt.plot(cumulative_regret_ucb, label='UCB Cumulative Regret', color='blue')
 plt.plot(cumulative_regret_ts, label='TS Cumulative Regret', color='red')
@@ -292,13 +335,12 @@ plt.legend()
 plt.title('Cumulative Regrets')
 plt.show()
 
-# Plot the cumulative rewards
+#Cumulative rewards
 plt.figure(figsize=(12, 8))
 plt.plot(cumulative_reward_ucb, label='UCB Cumulative Reward', color='blue')
 plt.plot(cumulative_reward_ts, label='TS Cumulative Reward', color='red')
-plt.plot(cumulative_reward_clairvoyant, label='Clairvoyant Cumulative Reward', color='green')
 plt.xlabel('Time')
-plt.ylabel('Cumulative Reward')
+plt.ylabel('Reward')
 plt.legend()
 plt.title('Cumulative Rewards')
 plt.show()

@@ -283,3 +283,33 @@ class CUSUMUCB(UCBLearner):
     def expectations(self):
       return self.empirical_means
 
+
+class EXP3Learner:
+    def __init__(self, n_arms, gamma):
+        self.n_arms = n_arms
+        self.gamma = gamma
+        self.weights = np.ones(n_arms)
+        self.t = 0
+        self.collected_rewards = np.zeros(n_arms)
+        self.counts = np.zeros(n_arms)
+
+    def update_observations(self, pulled_arm, reward):
+        self.counts[pulled_arm] += 1
+        self.collected_rewards[pulled_arm] += reward
+        self.t += 1
+
+    def pull_arm(self):
+        probability_distribution = (1 - self.gamma) * (self.weights / np.sum(self.weights)) + self.gamma / self.n_arms
+        return np.random.choice(self.n_arms, p=probability_distribution)
+
+    def update(self, pulled_arm, reward):
+        self.t += 1
+        self.update_observations(pulled_arm, reward)
+        probability_distribution = (1 - self.gamma) * (self.weights / np.sum(self.weights)) + self.gamma / self.n_arms
+        estimated_reward = reward / probability_distribution[pulled_arm]
+        self.weights[pulled_arm] = self.weights[pulled_arm] * np.exp(self.gamma * estimated_reward / self.n_arms)
+
+    def expectations(self):
+        return self.collected_rewards / (self.counts + 1e-6)
+
+

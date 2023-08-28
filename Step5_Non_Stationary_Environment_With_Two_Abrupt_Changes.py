@@ -51,7 +51,6 @@ K = np.array([p[:, i] for i in range(p.shape[1])])
 
 
 """Probability estimators"""
-
 def SW_Generate_Probability_Estimates(p, n_arms=n_arms, n_phases=n_phases, T=T, window_size=window_size, n_experiments=n_experiments):
     phases_len = int(T / n_phases)
     swucb_rewards_per_experiment = []
@@ -127,7 +126,6 @@ CUSUM_rounds_probabilities_for_each_arm = np.mean(CUSUM_rounds_probabilities_for
 
 
 """Adjusting output so to have one graph probability table for each round, for both CUSUM and SW UCB"""
-
 def Reshape(LIST):
   # Convert the lists into a NumPy array
   array_of_lists = np.array(LIST)
