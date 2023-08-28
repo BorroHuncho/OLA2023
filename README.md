@@ -1,4 +1,6 @@
-# Matching & Social Influence (OLA Project 056984)
+# Matching & Social Influence (OLA Project 056984 - 2023)
+## Group 8 - A. Borromini, J. Grassi
+<br>
 Consider a setting in which a company wants to increase the visibility of its products by using social influence techniques to reach possible customers. Then, it has to match the reached customers with some of its products.
 
 <details><summary><h2>Project Info</h2></summary>
@@ -104,27 +106,3 @@ When the optimal set of seeds is fixed, compute the value of the optimum by simu
     </ul>
     </details>
 </details>
-
-<h2>To Do:</h2>
-<ul>
-<s><li><h3>Preliminary - Environment & clairvoyant algorithm</h3></li></s>
-<s><li><h3>Step 1 - Learning for social influence</h3></li></s>
-<s><li><h3>Step 2 - Learning for matching</h3></li></s>
-<s><li><h3>Step 3 - Learning for joint social influence and matching</h3></li></s>
-<li><h3>Step 4 - Contexts and their generation</h3></li>
-<ol>
-<li>Implement context generation algorithm (video/slides 1.10)</li>
-<li>Repeat Step 3 with context</li>
-<li>Compare with clairvoyant and plot metrics</li>
-</ol>
-</li>
-<li><h3>Step 5 - Dealing with non-stationary environments with two abrupt changes</h3></li>
-<ol>
-<li>Implement UCB1-like algorithm for estimating activation probabilities (tutorial 2.2 - CUMSUM-UCB for Online Matching in Non-Stationary Environments)</li>
-<li>Implement  SW-UCB1-like algorithm for estimating activation probabilities (tutorial 2.2 - CUMSUM-UCB for Online Matching in Non-Stationary Environments; tutorial 1.2 - Thompson Sampling in Non Stationary Environments) </li>
-<li>Implement CUSUM UCB1-like algorithm for estimating activation probabilities (tutorial 2.2 - CUMSUM-UCB for Online Matching in Non-Stationary Environments;)</li>
-<li>Compare with clairvoyant and plot metrics</li>
-</ol>
-</li>
-<li><h3>Step 6 - Dealing with non-stationary environments with many abrupt changes</h3></li>
-</ul>
