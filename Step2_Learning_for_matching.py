@@ -1,13 +1,17 @@
+# Authors: A. Borromini, J. Grassi
+# Date: 29_08_2023
+
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import random
 from scipy.optimize import linear_sum_assignment
-
-
 from Environment import Environment
 from Learners import Learner, UCBLearner, TSLearner, UCBMatching, TSMatching
 from Utils import simulate_episode, test_seed, greedy_algorithm, hungarian_algorithm, get_reward, clairvoyant
+
+
+"""Setting up parameters"""
 
 n_arms = 30
 edge_rate=0.07
@@ -18,8 +22,8 @@ node_classes = 3
 product_classes = 3
 products_per_class = 3
 T = 365
-means = np.random.uniform(0.2, 0.8, size=(3,3))
-std_dev = np.random.uniform(0.1, 0.2, size=(3, 3))
+means = np.random.uniform(0.5, 0.8, size=(3,3))
+std_dev = np.random.uniform(0.1, 0.15, size=(3, 3))
 true_reward_parameters = (means, std_dev)
 customer_assignments = np.random.choice([0,1,2], size=30)
 
@@ -28,7 +32,7 @@ customer_assignments = np.random.choice([0,1,2], size=30)
 """Estimating means with MatchingUCB"""
 
 p = true_reward_parameters[0]
-n_experiments = 10
+n_experiments = 1
 
 learner = UCBMatching(p.size, *p.shape)
 rewards_per_experiment = []
@@ -55,7 +59,7 @@ ucb_means = np.mean(means, axis=(0,))
 """Estimating means with MatchingTS"""
 
 p = true_reward_parameters[0]
-n_experiments = 10
+n_experiments = 1
 
 learner = TSMatching(p.size, *p.shape)
 rewards_per_experiment = []
@@ -150,9 +154,9 @@ plt.show()
 
 """Overall outcome when estimating matching rewards with UCBMatching"""
 
-print("Finding 3 optimum seeds ... ...")
+print("Finding 3 optimal seeds ... ...")
 opt_seeds = greedy_algorithm(graph_probabilities, 3, 1000, 10)
-std_dev = np.full(9, 0.15)
+std_dev = np.full(9, 0.05)
 std_dev = std_dev.reshape(3,3)
 
 
@@ -171,13 +175,6 @@ for index in tqdm(range(T)):
     std_dev_ts_overall_rew.append(ucb_round_score[1])
 
 
-optimum_means = []
-optimum_std_dev = []
-clairvoyant_output = clairvoyant(graph_probabilities, graph_probabilities, customer_assignments, rewards_parameters=true_reward_parameters, real_reward_parameters=true_reward_parameters, n_exp=100, seeds=opt_seeds)
-
-for t in range(T):
-    optimum_means.append(clairvoyant_output[0])
-    optimum_std_dev.append(clairvoyant_output[1])
 
 
 
@@ -188,7 +185,7 @@ optimum_std_dev = []
 attempts = []
 for i in range(100):
     z = clairvoyant(graph_probabilities, graph_probabilities, customer_assignments, true_reward_parameters,
-                    true_reward_parameters, 100, seeds=opt_seeds)
+                    true_reward_parameters, 10, seeds=opt_seeds)
     attempts.append(z[0])
 clairvoyant_output = max(attempts)
 

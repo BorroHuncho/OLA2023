@@ -1,10 +1,11 @@
+# Authors: A. Borromini, J. Grassi
+# Date: 29_08_2023
+
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import random
 from scipy.optimize import linear_sum_assignment
-
-
 from Environment import Environment, NonStationaryEnvironment
 from Learners import Learner, UCBLearner, TSLearner, CUSUM, CUSUMUCB, SW_UCBLearner, EXP3Learner
 from Utils import simulate_episode, test_seed, greedy_algorithm, hungarian_algorithm, get_reward, clairvoyant
@@ -296,27 +297,24 @@ plt.xlabel('Time')
 plt.ylabel('Reward')
 plt.title('Sliding Window UCB')
 plt.xticks(time_periods[::30])
-plt.figure(figsize=(10, 6))
 plt.show()
-plt.figure(figsize=(12, 7))
 
 
 time_periods = range(len(CUSUM_mean_rewards_per_round))
 for t in time_periods:
     mean = CUSUM_mean_rewards_per_round[t]
     std_dev = CUSUM_std_dev_rewards_per_round[t]
-    plt.vlines(t, mean - std_dev, mean + std_dev, color='lightpink')
+    plt.vlines(t, mean - std_dev, mean + std_dev, color='pink')
 plt.plot(time_periods, optimum_means, color='green', linestyle='-', linewidth=5)
 plt.plot(time_periods, CUSUM_mean_rewards_per_round, color='red', linestyle='-')
 plt.xlabel('Time')
 plt.ylabel('Reward')
 plt.title('Change Detection CUSUM UCB')
 plt.xticks(time_periods[::30])
-plt.figure(figsize=(10, 6))
 plt.show()
 
 
-plt.figure(figsize=(12, 7))
+plt.figure(figsize=(10, 6))
 time_periods = range(len(EXP3_mean_rewards_per_round))
 for t in time_periods:
     mean = EXP3_mean_rewards_per_round[t]
@@ -328,7 +326,6 @@ plt.xlabel('Time')
 plt.ylabel('Reward')
 plt.title('Change Detection CUSUM UCB')
 plt.xticks(time_periods[::30])
-plt.figure(figsize=(10, 6))
 plt.show()
 
 
@@ -346,5 +343,4 @@ plt.ylabel('Cumulative Regret')
 plt.title('Cumulative Regrets')
 plt.xticks(time_periods[::30])
 plt.legend()
-plt.figure(figsize=(10, 6))
 plt.show()

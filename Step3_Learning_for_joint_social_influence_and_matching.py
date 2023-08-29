@@ -1,9 +1,11 @@
+# Authors: A. Borromini, J. Grassi
+# Date: 29_08_2023
+
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import random
 from scipy.optimize import linear_sum_assignment
-
 from Environment import Environment
 from Learners import Learner, UCBLearner, TSLearner, UCBMatching, TSMatching
 from Utils import simulate_episode, test_seed, greedy_algorithm, hungarian_algorithm, get_reward, clairvoyant
@@ -102,7 +104,7 @@ product_classes = 3
 products_per_class = 3
 T = 365
 
-means = np.random.uniform(0.2, 0.8, size=(3,3))
+means = np.random.uniform(0.5, 0.8, size=(3,3))
 std_dev = np.random.uniform(0.1, 0.2, size=(3, 3))
 true_reward_parameters = (means, std_dev)
 customer_assignments = np.random.choice([0,1,2], size=30)

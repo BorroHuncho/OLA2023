@@ -1,3 +1,6 @@
+# Authors: A. Borromini, J. Grassi
+# Date: 29_08_2023
+
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm

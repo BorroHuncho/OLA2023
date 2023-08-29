@@ -1,3 +1,6 @@
+# Authors: A. Borromini, J. Grassi
+# Date: 29_08_2023
+
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
@@ -90,7 +93,7 @@ def clairvoyant(graph_probabilities, true_prob, customer_assignments, rewards_pa
     reward_per_experiment = [[] for i in range(n_exp)]
 
     if seeds == None:
-        opt_seeds = greedy_algorithm(graph_probabilities, 3, 50, 100)
+        opt_seeds = greedy_algorithm(graph_probabilities, 3, 10, 100)
     else:
         opt_seeds = seeds
 

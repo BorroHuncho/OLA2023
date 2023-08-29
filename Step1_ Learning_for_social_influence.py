@@ -1,10 +1,11 @@
+# Authors: A. Borromini, J. Grassi
+# Date: 29_08_2023
+
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import random
 from scipy.optimize import linear_sum_assignment
-
-
 from Environment import Environment
 from Learners import Learner, UCBLearner, TSLearner
 from Utils import simulate_episode, test_seed, greedy_algorithm, hungarian_algorithm, get_reward, clairvoyant
@@ -28,10 +29,8 @@ customer_assignments = np.random.choice([0,1,2], size=30)
 n_exp = 25
 
 
-
-
 """ESTIMATING EDGE PROBABILITIES WITH UCB"""
-def UCB_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=100):
+def UCB_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=10):
 
     experimentS_means_at_each_round = np.empty((n_experiments, T, n_arms))
 
@@ -56,7 +55,7 @@ def UCB_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=100)
 UCB_estimated_graph_probabilities = []
 
 for index in range(len(graph_probabilities)):
-    print("Estimating Arm", index)
+    print("Estimating Activation Probabilities for Arm", index, "with UCB")
     arm_probabilities = UCB_Generate_Probability_Estimates(graph_probabilities[index])
     arm_probabilities = np.mean(arm_probabilities, axis=0)
     UCB_estimated_graph_probabilities.append(arm_probabilities)
@@ -65,9 +64,8 @@ UCB_estimated_graph_probabilities = np.array(UCB_estimated_graph_probabilities)
 UCB_estimated_graph_probabilities = np.transpose(UCB_estimated_graph_probabilities, (1, 0, 2))
 
 
-
 """ESTIMATING EDGE PROBABILITIES WITH TS"""
-def TS_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=100):
+def TS_Generate_Probability_Estimates(p, n_arms=30, T = 365, n_experiments=10):
 
     experimentS_means_at_each_round = np.empty((n_experiments, T, n_arms))
 
@@ -173,7 +171,7 @@ plt.show()
 
 """COMPUTING REWARDS WITH UCB ESTIMATES"""
 
-n_exp = 50
+n_exp = 5
 
 UCB_mean_rewards_per_round = []
 UCB_std_dev_rewards_per_round = []
@@ -201,7 +199,7 @@ optimum_means = []
 optimum_std_dev = []
 
 for t in tqdm(range(T)):
-    clairvoyant_output = clairvoyant(graph_probabilities, graph_probabilities, customer_assignments, rewards_parameters, real_reward_parameters=rewards_parameters, n_exp=100)
+    clairvoyant_output = clairvoyant(graph_probabilities, graph_probabilities, customer_assignments, rewards_parameters, real_reward_parameters=rewards_parameters, n_exp=5)
     optimum_means.append(clairvoyant_output[0])
     optimum_std_dev.append(clairvoyant_output[1])
 
@@ -211,8 +209,8 @@ for t in tqdm(range(T)):
 optimum_means100 = []
 attempts = []
 
-for ex in tqdm(range(75)):
-    z = clairvoyant(graph_probabilities, graph_probabilities, customer_assignments, rewards_parameters, real_reward_parameters=rewards_parameters, n_exp=100)
+for ex in tqdm(range(50)):
+    z = clairvoyant(graph_probabilities, graph_probabilities, customer_assignments, rewards_parameters, real_reward_parameters=rewards_parameters, n_exp=5)
     attempts.append(z[0])
 
 clairvoyant_output = max(attempts)

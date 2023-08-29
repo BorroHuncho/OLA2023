@@ -1,13 +1,15 @@
+# Authors: A. Borromini, J. Grassi
+# Date: 29_08_2023
+
 import matplotlib.pyplot as plt
 import numpy as np
 from tqdm import tqdm
 import random
 from scipy.optimize import linear_sum_assignment
-
-
 from Environment import Environment, NonStationaryEnvironment
 from Learners import Learner, UCBLearner, TSLearner, CUSUM, CUSUMUCB, SW_UCBLearner, EXP3Learner
 from Utils import simulate_episode, test_seed, greedy_algorithm, hungarian_algorithm, get_reward, clairvoyant
+
 
 """Parameters Set Up"""
 
@@ -282,7 +284,6 @@ plt.xlabel('Time')
 plt.ylabel('Reward')
 plt.title('Sliding Window UCB')
 plt.xticks(time_periods[::30])
-plt.figure(figsize=(10, 6))
 plt.show()
 
 
@@ -298,7 +299,6 @@ plt.xlabel('Time')
 plt.ylabel('Reward')
 plt.title('Change Detection CUSUM UCB')
 plt.xticks(time_periods[::30])
-plt.figure(figsize=(10, 6))
 plt.show()
 
 
@@ -314,7 +314,6 @@ plt.xlabel('Time')
 plt.ylabel('Reward')
 plt.title('Change Detection CUSUM UCB')
 plt.xticks(time_periods[::30])
-plt.figure(figsize=(10, 6))
 plt.show()
 
 
@@ -332,5 +331,4 @@ plt.ylabel('Cumulative Regret')
 plt.title('Cumulative Regrets')
 plt.xticks(time_periods[::30])
 plt.legend()
-plt.figure(figsize=(10, 6))
 plt.show()
