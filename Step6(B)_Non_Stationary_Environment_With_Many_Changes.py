@@ -125,7 +125,7 @@ CUSUM_rounds_probabilities_for_each_arm = np.mean(CUSUM_rounds_probabilities_for
 
 """Estimating edge activation probabilities with EXP3"""
 
-gamma = 0.15 # Parameter for the EXP3 algorithm
+gamma = 0.65 # Parameter for the EXP3 algorithm
 
 def EXP3_Generate_Probability_Estimates(p, n_arms=n_arms, n_phases=n_phases, T=T, n_experiments=10):
     phases_len = int(T / n_phases)
